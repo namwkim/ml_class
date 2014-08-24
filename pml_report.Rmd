@@ -4,7 +4,7 @@ The dataset contains a lot of missing and invalid data. While loading, I replace
 
 After then, removed null columns where all values are NA. This reduces the data from 160 variables to 53 variables.
 
-I ran a randomforest algorithm to predict the classe variable of the test set, resulting in 100% accuracy.
+I ran a randomforest algorithm to predict the classe variable of the test set. , resulting in 100% accuracy.
 
 ```{r fig.width=7, fig.height=6}
 library(caret)
@@ -18,12 +18,11 @@ testData=read.csv("pml-testing.csv", na.strings=c("","NA","#DIV/0!"))
 testData = testData[ , colSums(is.na(testData)) == 0]
 testData=testData[, c(-1,-2,-3,-4,-5,-6,-7)]
 
-modFit<-train(classe~., method='rpart', data=trainData)
-answers<-predict(modFit, testData)
-
 modFitRf<-randomForest(classe~., trainData)
-answersRf<-predict(modFit, testData)
+plot(modFitRf)
+modFitRf$err.rate
 
+answersRf<-predict(modFitRf, testData)
 answersRf
 ```
 
