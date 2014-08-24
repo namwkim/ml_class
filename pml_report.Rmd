@@ -1,0 +1,29 @@
+
+========================================================
+The dataset contains a lot of missing and invalid data. While loading, I replaced all those data into 'NA' using na.strings parameter.
+
+After then, removed null columns where all values are NA. This reduces the data from 160 variables to 53 variables.
+
+I ran a randomforest algorithm to predict the classe variable of the test set, resulting in 100% accuracy.
+
+```{r fig.width=7, fig.height=6}
+library(caret)
+library(randomForest)
+set.seed(32323)
+trainData=read.csv("pml-training.csv", na.strings=c("","NA","#DIV/0!"))
+trainData = trainData[ , colSums(is.na(trainData)) == 0]
+trainData=trainData[, c(-1,-2,-3,-4,-5,-6,-7)]
+
+testData=read.csv("pml-testing.csv", na.strings=c("","NA","#DIV/0!"))
+testData = testData[ , colSums(is.na(testData)) == 0]
+testData=testData[, c(-1,-2,-3,-4,-5,-6,-7)]
+
+modFit<-train(classe~., method='rpart', data=trainData)
+answers<-predict(modFit, testData)
+
+modFitRf<-randomForest(classe~., trainData)
+answersRf<-predict(modFit, testData)
+
+answersRf
+```
+
